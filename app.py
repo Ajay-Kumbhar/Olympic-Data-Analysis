@@ -1,18 +1,10 @@
 import streamlit as st
 import pandas as pd
-from sklearn.preprocessing import StandardScaler
 import preprocessor, helper
 import plotly.express as px
 import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.figure_factory as ff
-import pickle
-
-pd.set_option('display.max_rows', None)
-pd.set_option('display.max_columns', None)
-
-with open('RFclassifier', 'rb') as pickle_file:
-    RFclassifier = pickle.load(pickle_file)
 
 df = pd.read_csv('athlete_events.csv')
 region_df = pd.read_csv('noc_regions.csv')
@@ -24,32 +16,6 @@ spt.drop(58, inplace=True, axis=0)
 
 data = pd.read_csv('athletes(6).csv')
 data = data.loc[:, ~data.columns.str.contains('^Unnamed')]
-
-country = data['NOC'].sort_values().unique()
-sport = data['Sport'].sort_values().unique()
-
-country_dict = {}
-zero_list = []
-
-for i in range(220):
-    zero_list.append(0)
-index = 0
-for c in country:
-    temp_list = zero_list.copy()
-    temp_list[index] = 1
-    index += 1
-    country_dict[c] = temp_list
-
-sport_dict = {}
-zero_list = []
-for i in range(65):
-    zero_list.append(0)
-index = 0
-for s in sport:
-    temp_list = zero_list.copy()
-    temp_list[index] = 1
-    index += 1
-    sport_dict[s] = temp_list
 
 df = preprocessor.preprocess(df, region_df)
 
@@ -268,19 +234,6 @@ if user_menu == 'Winner Prediction':
         weight_input = float(Weight)
         season = 1
         year = 2024
-
-        l = [gender_input, age_input, height_input, weight_input, year, season]
-
-        for item in country_dict[country_input]:
-            l.append(item)
-
-        for item in sport_dict[sport_input]:
-            l.append(item)
-
-        l1 = [l]
-        scaler = StandardScaler()
-
-        l1 = scaler.fit_transform(l1)
 
         st.header('')
         if age_input < 18.0 or age_input >= 40 or height_input <= 140 or height_input >= 200 or weight_input <= 50 or weight_input >= 80 or country_input == 'AFG' or sport_input == 'Cricket':
