@@ -287,4 +287,4 @@ if user_menu == 'Winner Prediction':
             st.subheader('Unfortunately, the athlete is less likely to win')
         else:
             st.subheader(
-                'Congratulations, the athlete is very likely to win!' if RFclassifier.predict(l1)[0] == 1 else 'Unfortunately, the athlete is less likely to win')
+                'Congratulations, the athlete is very likely to win!')
